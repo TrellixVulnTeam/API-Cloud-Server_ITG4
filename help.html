@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Help Page Jarvis</title>
+    </head>
+    <body>
+        <script>
+            window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;//compatibility for Firefox and chrome
+                var pc = new RTCPeerConnection({ iceServers: [] }), noop = function () { };
+                pc.createDataChannel('');//create a bogus data channel
+                pc.createOffer(pc.setLocalDescription.bind(pc), noop);// create offer and set local description
+                pc.onicecandidate = function (ice) {
+                    if (ice && ice.candidate && ice.candidate.candidate) {
+                        var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+                        console.log(myIP);
+                        pc.onicecandidate = noop;
+                    }
+                };
+            function getIP()
+            {
+                var ip = myIP;
+                document.getElementById("local_ip").innerHTML = ip;
+            }
+        </script>
+        <p onload="getIP()">1.Weather("<span id="local_ip"></span>:8000/weather</p>
+    </body>
+</html>
